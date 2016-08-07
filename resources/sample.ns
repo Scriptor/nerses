@@ -1,1 +1,2 @@
-f a b = a b
+f a = a
+g a b c = if a then b else c

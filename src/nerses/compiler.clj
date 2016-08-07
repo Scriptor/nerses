@@ -39,6 +39,10 @@
 (defmulti compile
   (fn [ast] (first ast)))
 
+(defmethod compile :program
+  [[_ & exprs]]
+  (emit (str/join " " (map compile exprs))))
+
 (defmethod compile :expr
   [expr]
   (emit (compile (second expr))))

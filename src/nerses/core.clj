@@ -7,11 +7,12 @@
 
 (def parser
   (insta/parser
-    "expr = func_def / if_expr / func_call / number
-     func_def = name arglist ws* <'='> ws* expr
+    "program = func_def+
+     func_def = name arglist ws* <'='> ws* expr ws*
+     expr = if_expr / func_call / number
      arglist = (ws name)*
      if_expr = <'if'> ws expr ws <'then'> ws expr ws <'else'> ws expr
-     func_call = name (ws expr) / name
+     func_call = name (ws expr) | name
      name = #'[A-z]+'
      <ws> = <#'\\s+'>
      number = #'[0-9]+'"))
@@ -20,6 +21,10 @@
   [s]
   "Calls the `parser` grammer defined above on the argument." 
   (insta/parse parser s))
+
+(defn parse-file
+  [f]
+  (parse (str/trim (slurp f))))
 
 (defn compile
   [file]
