@@ -8,6 +8,23 @@
   [& strs]
   (apply str strs))
 
+(defn tpl-varname
+  [k]
+  (str "~"
+       (cond
+         (keyword? k) (name k)
+         :default (str k))
+       "~"))
+
+(defn emit-tpl
+  [tpl m]
+  (emit (reduce-kv (fn [s k v] (str/replace s (tpl-varname k) v))
+                   tpl
+                   m)))
+
+(def fn-tpl
+  "function ~n~(~a~) { ~b~; }")
+
 (defn emit-fn
   [func-name arglist body]
   (emit "function " func-name "(" arglist ")"
