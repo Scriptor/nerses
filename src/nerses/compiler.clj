@@ -27,8 +27,14 @@
 
 (defn emit-fn
   [func-name arglist body]
-  (emit "function " func-name "(" arglist ")"
-        "{" body "}"))
+  (emit-tpl fn-tpl {:n func-name :a arglist :b body}))
+
+(def if-then-tpl
+  "if (~c~) { ~t~; }else{ ~e~; }")
+
+(defn emit-if-then
+  [condition then else]
+  (emit-tpl if-then-tpl {:c condition :t then :e else}))
 
 (defmulti compile
   (fn [ast] (first ast)))
@@ -47,6 +53,13 @@
 (defmethod compile :arglist
   [[_ & args]]
   (emit (str/join arg-sep (map compile args))))
+
+(defmethod compile :if_expr
+  [[_ condition then else]]
+  (let [c-condition (compile condition)
+        c-then (compile then)
+        c-else (compile else)]
+    (emit-if-then c-condition c-then c-else)))
 
 (defmethod compile :func_call
   [[_ func-name arg]]

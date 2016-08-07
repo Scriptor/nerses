@@ -7,9 +7,10 @@
 
 (def parser
   (insta/parser
-    "expr = func_def / func_call / number
+    "expr = func_def / if_expr / func_call / number
      func_def = name arglist ws* <'='> ws* expr
      arglist = (ws name)*
+     if_expr = <'if'> ws expr ws <'then'> ws expr ws <'else'> ws expr
      func_call = name (ws expr) / name
      name = #'[A-z]+'
      <ws> = <#'\\s+'>
