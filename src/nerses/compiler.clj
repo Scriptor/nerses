@@ -39,6 +39,10 @@
   [[_ nm]]
   (emit nm))
 
+(defmethod compile :number
+  [[_ num]]
+  (emit num))
+
 (defmethod compile nil
   [_]
   (emit ""))
